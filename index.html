@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeluargaKita - Portal Parenting & Tumbuh Kembang Anak</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        },
+                        warm: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                        },
+                        coral: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom scrollbar for recipe/article cards */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-between selection:bg-brand-100 selection:text-brand-700">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-teal-100 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-500 to-warm-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <i class="fa-solid fa-baby text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl bg-gradient-to-r from-brand-700 via-teal-600 to-warm-500 bg-clip-text text-transparent">
+                        KeluargaKita
+                    </h1>
+                    <p class="text-xs text-slate-500 font-medium">Sahabat Pengasuhan Ayah & Ibu</p>
+                </div>
+            </div>
+
+            <!-- Profil Anak Ringkas -->
+            <div class="hidden sm:flex items-center gap-3 bg-brand-50 px-3 py-1.5 rounded-2xl border border-brand-100">
+                <div class="w-8 h-8 rounded-full bg-warm-200 text-warm-700 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-child"></i>
+                </div>
+                <div class="text-left text-xs">
+                    <p class="font-bold text-slate-700" id="header-child-name">Si Kecil</p>
+                    <p class="text-slate-500" id="header-child-age">18 Bulan</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINERS -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- WELCOME BANNER -->
+        <section class="bg-gradient-to-r from-brand-500 via-teal-600 to-brand-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-brand-500/10 relative overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl text-white pointer-events-none">
+                <i class="fa-solid fa-heart"></i>
+            </div>
+            <div class="relative z-10 max-w-2xl space-y-2">
+                <span class="inline-block bg-white/20 backdrop-blur-sm text-xs font-semibold px-3 py-1 rounded-full text-white">
+                    <i class="fa-solid fa-sparkles mr-1"></i> Selamat Datang, Bunda & Ayah!
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                    Setiap Langkah Kecil Adalah Petualangan Besar ❤️
+                </h2>
+                <p class="text-brand-50 text-sm sm:text-base opacity-90 leading-relaxed">
+                    Pantau tumbuh kembang, atur jadwal harian si kecil, dan temukan inspirasi resep sehat serta tips parenting terpercaya di satu tempat.
+                </p>
+            </div>
+        </section>
+
+        <!-- NAVIGASI TAB UTAMA -->
+        <nav class="bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex overflow-x-auto gap-2 no-scrollbar">
+            <button onclick="switchTab('tab-jadwal')" id="btn-tab-jadwal" class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all whitespace-nowrap bg-brand-500 text-white shadow-sm">
+                <i class="fa-solid fa-calendar-check"></i> Jadwal & Rutinitas
+            </button>
+            <button onclick="switchTab('tab-growth')" id="btn-tab-growth" class="tab-btn flex-1 py-3 px-4 rounded-xl font-semibold text-slate-600 hover:bg-slate-50 text-sm flex items-center justify-center gap-2 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-chart-line text-brand-500"></i> Tracker Tumbuh Kembang
+            </button>
+            <button onclick="switchTab('tab-resep')" id="btn-tab-resep" class="tab-btn flex-1 py-3 px-4 rounded-xl font-semibold text-slate-600 hover:bg-slate-50 text-sm flex items-center justify-center gap-2 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-utensils text-warm-500"></i> MPASI & Nutrisi
+            </button>
+            <button onclick="switchTab('tab-jurnal')" id="btn-tab-jurnal" class="tab-btn flex-1 py-3 px-4 rounded-xl font-semibold text-slate-600 hover:bg-slate-50 text-sm flex items-center justify-center gap-2 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-book-bookmark text-coral-500"></i> Jurnal Momen
+            </button>
+            <button onclick="switchTab('tab-tips')" id="btn-tab-tips" class="tab-btn flex-1 py-3 px-4 rounded-xl font-semibold text-slate-600 hover:bg-slate-50 text-sm flex items-center justify-center gap-2 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-lightbulb text-amber-500"></i> Tips Parenting
+            </button>
+        </nav>
+
+        <!-- ==================== TAB 1: JADWAL & PENGINGAT ==================== -->
+        <section id="tab-jadwal" class="tab-content active space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Form Tambah Kegiatan -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-plus text-brand-500"></i> Tambah Jadwal Baru
+                    </h3>
+                    
+                    <form id="schedule-form" onsubmit="addSchedule(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Kegiatan</label>
+                            <input type="text" id="sched-title" placeholder="Contoh: Imunisasi DPT, Jam Makan Siang" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-brand-500 focus:ring-1 focus:ring-brand-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
+                                <select id="sched-category" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-brand-500">
+                                    <option value="Kesehatan">🏥 Kesehatan/Imunisasi</option>
+                                    <option value="Makan">🥣 Jam Makan / MPASI</option>
+                                    <option value="Tidur">🌙 Jam Tidur</option>
+                                    <option value="Aktivitas">🎨 Bermain / Sekolah</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Waktu</label>
+                                <input type="time" id="sched-time" required class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-brand-500">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-brand-500/20 active:scale-95">
+                            Simpan Ke Jadwal
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Daftar Agenda Aktivitas -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-brand-500"></i> Agenda Hari Ini
+                        </h3>
+                        <span id="sched-counter" class="text-xs bg-brand-50 text-brand-700 font-semibold px-2.5 py-1 rounded-full border border-brand-100">
+                            0 Selesai
+                        </span>
+                    </div>
+
+                    <div id="schedule-list" class="space-y-3 min-h-[200px]">
+                        <!-- List item dimasukkan via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: TRACKER TUMBUH KEMBANG ==================== -->
+        <section id="tab-growth" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Input Data Anak -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-brand-500"></i> Input Data Tumbuh Kembang
+                    </h3>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Anak</label>
+                            <input type="text" id="child-name-input" value="Si Kecil" onchange="updateChildInfo()" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-brand-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Usia (Bulan)</label>
+                                <input type="number" id="child-age-month" value="18" min="0" max="72" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-brand-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis Kelamin</label>
+                                <select id="child-gender" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-brand-500">
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Berat Badan (kg)</label>
+                            <input type="number" step="0.1" id="child-weight" value="10.8" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Tinggi / Panjang Badan (cm)</label>
+                            <input type="number" step="0.1" id="child-height" value="82.5" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-brand-500">
+                        </div>
+
+                        <button onclick="calculateGrowth()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-brand-500/20 active:scale-95">
+                            Hitung & Analisis
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hasil Analisis Ideal WHO Standar Ringkas -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                        <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-brand-500"></i> Status Pertumbuhan (WHO Standard)
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Kartu Berat -->
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-semibold text-slate-500">Berat Badan</span>
+                                    <i class="fa-solid fa-weight-scale text-brand-500"></i>
+                                </div>
+                                <div id="weight-value" class="text-2xl font-black text-slate-800">10.8 kg</div>
+                                <div id="weight-status" class="inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">
+                                    Ideal (Sesuai)
+                                </div>
+                                <p id="weight-desc" class="text-xs text-slate-500">Kisaran ideal usia ini: 9.6 - 12.2 kg</p>
+                            </div>
+
+                            <!-- Kartu Tinggi -->
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-semibold text-slate-500">Tinggi Badan</span>
+                                    <i class="fa-solid fa-ruler-vertical text-warm-500"></i>
+                                </div>
+                                <div id="height-value" class="text-2xl font-black text-slate-800">82.5 cm</div>
+                                <div id="height-status" class="inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">
+                                    Ideal (Sesuai)
+                                </div>
+                                <p id="height-desc" class="text-xs text-slate-500">Kisaran ideal usia ini: 78.0 - 86.5 cm</p>
+                            </div>
+                        </div>
+
+                        <!-- Rekomendasi/Catatan -->
+                        <div class="p-4 rounded-2xl bg-brand-50/60 border border-brand-100 space-y-2">
+                            <h4 class="font-bold text-sm text-brand-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-doctor"></i> Catatan Nutrisi & Perkembangan
+                            </h4>
+                            <p id="growth-recommendation" class="text-xs text-brand-900 leading-relaxed">
+                                Pertumbuhan si kecil terpantau sangat baik! Pertahankan asupan gizi seimbang (protein hewani, karbohidrat, dan serat) serta pastikan stimulasinya cukup setiap hari.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: RESEP & NUTRISI ==================== -->
+        <section id="tab-resep" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="font-bold text-xl text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-bowl-food text-warm-500"></i> Resep Makanan & MPASI Sehat
+                        </h3>
+                        <p class="text-xs text-slate-500">Pilihan menu bernutrisi tinggi untuk mendukung tumbuh kembang anak</p>
+                    </div>
+
+                    <!-- Filter Usia -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterRecipes('all')" class="recipe-filter-btn active text-xs font-bold px-3 py-2 rounded-xl border border-brand-500 bg-brand-500 text-white transition">
+                            Semua Usia
+                        </button>
+                        <button onclick="filterRecipes('mpasi')" class="recipe-filter-btn text-xs font-bold px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition">
+                            MPASI (6-12 Bln)
+                        </button>
+                        <button onclick="filterRecipes('toddler')" class="recipe-filter-btn text-xs font-bold px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition">
+                            Toddler (1-3 Thn)
+                        </button>
+                        <button onclick="filterRecipes('kids')" class="recipe-filter-btn text-xs font-bold px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition">
+                            Anak (4+ Thn)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid Card Resep -->
+                <div id="recipes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- JS akan inject daftar resep -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: JURNAL MOMEN BAHAGIA ==================== -->
+        <section id="tab-jurnal" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Form Tambah Momen -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-feather-pointed text-coral-500"></i> Catat Momen Spesial
+                    </h3>
+
+                    <form id="journal-form" onsubmit="addJournal(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Momen / Milestone</label>
+                            <input type="text" id="journal-title" placeholder="Langkah pertama, Kata 'Mama' pertama" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-coral-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
+                            <input type="date" id="journal-date" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-coral-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Manis Orang Tua</label>
+                            <textarea id="journal-notes" rows="4" placeholder="Ceritakan momen indah ini..." required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-coral-400"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-coral-500 hover:bg-coral-600 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-coral-500/20 active:scale-95">
+                            Simpan Momen Indah
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Timeline / List Momen -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-heart text-coral-500"></i> Diari Perkembangan & Kenangan
+                    </h3>
+
+                    <div id="journal-list" class="space-y-4 min-h-[200px]">
+                        <!-- Inject via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: TIPS PARENTING ==================== -->
+        <section id="tab-tips" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="font-bold text-xl text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i> Panduan & Tips Parenting
+                        </h3>
+                        <p class="text-xs text-slate-500">Artikel singkat dan praktis untuk mendampingi masa tumbuh kembang anak</p>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+                        <input type="text" id="tips-search" oninput="searchTips()" placeholder="Cari tips (cth: tantrum)..." class="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-sm focus:outline-amber-400">
+                    </div>
+                </div>
+
+                <!-- Grid Artikel Tips -->
+                <div id="tips-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Inject via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-100 py-6 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center text-xs text-slate-400 space-y-2">
+            <p class="font-semibold text-slate-600">KeluargaKita &copy; 2026 - Portal Pengasuhan Sehat & Bahagia</p>
+            <p>Dirancang khusus untuk mendukung Ayah & Ibu hebat di Indonesia ❤️</p>
+        </div>
+    </footer>
+
+    <!-- MODAL DETAIL RESEP -->
+    <div id="recipe-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeRecipeModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="recipe-modal-content">
+                <!-- Inject via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA INITIAL & STATE ---
+        let schedules = [
+            { id: 1, title: "Bubur Tim Hati Ayam (MPASI)", category: "Makan", time: "07:00", done: true },
+            { id: 2, title: "Tidur Siang Si Kecil", category: "Tidur", time: "12:30", done: false },
+            { id: 3, title: "Jadwal Imunisasi DPT Lanjutan", category: "Kesehatan", time: "16:00", done: false }
+        ];
+
+        let journals = [
+            { id: 1, title: "Pertama Kali Mengucapkan 'Mama'", date: "2026-02-14", notes: "Suara imutnya sangat jelas saat pagi hari bangun tidur. Momen haru yang tidak bisa dilupakan!" },
+            { id: 2, title: "Berhasil Berjalan 5 Langkah Tanpa Pegangan", date: "2026-03-20", notes: "Meskipun masih sedikit oleng, si kecil tersenyum bangga saat kami bertepuk tangan." }
+        ];
+
+        const recipesData = [
+            {
+                id: 1,
+                title: "Puree Alpukat & Daging Sapi Tim",
+                category: "mpasi",
+                categoryLabel: "MPASI 6-12 Bln",
+                time: "20 Menit",
+                icon: "fa-bowl-food",
+                bg: "bg-emerald-50 text-emerald-600",
+                ingredients: ["50gr Daging sapi giling", "1/2 buah Alpukat matang", "1 sdt Minyak zaitun / UB", "100ml Kaldu ceker alami"],
+                steps: [
+                    "Tumis daging giling dengan sedikit minyak zaitun hingga matang.",
+                    "Kukus sebentar lalu blender halus bersama alpukat dan sedikit kaldu.",
+                    "Sajikan hangat dalam mangkuk bersih si kecil."
+                ]
+            },
+            {
+                id: 2,
+                title: "Nasi Tim Salmon Brokoli Keju",
+                category: "toddler",
+                categoryLabel: "Toddler 1-3 Thn",
+                time: "25 Menit",
+                icon: "fa-fish",
+                bg: "bg-warm-100 text-warm-600",
+                ingredients: ["3 sendok makan Nasi matang", "40gr Fillet Salmon segar", "3 kuntum Brokoli cincang", "1 lembar Keju cheddar melt"],
+                steps: [
+                    "Rebus nasi bersama kaldu dan potongan salmon hingga menjadi bubur tim lembut.",
+                    "Masukkan brokoli cincang 5 menit sebelum matang.",
+                    "Taburi keju parut di atasnya hingga meleleh. Sajikan hangat."
+                ]
+            },
+            {
+                id: 3,
+                title: "Nugget Ayam Wortel Homemade",
+                category: "kids",
+                categoryLabel: "Anak 4+ Thn",
+                time: "35 Menit",
+                icon: "fa-stroopwafel",
+                bg: "bg-coral-50 text-coral-500",
+                ingredients: ["250gr Dada ayam giling", "1 buah Wortel parut halus", "1 butir Telur", "2 sdm Tepung tapioka", "Tepung roti secukupnya"],
+                steps: [
+                    "Campur ayam giling, wortel, telur, dan tepung tapioka. Bumbui sedikit garam dan bawang putih.",
+                    "Kukus adonan dalam loyang selama 20 menit hingga padat.",
+                    "Potong-potong, balur tepung roti, lalu goreng dengan minyak bersih hingga keemasan."
+                ]
+            }
+        ];
+
+        const tipsData = [
+            {
+                title: "Cara Efektif Mengatasi Tantrum Anak dengan Tenang",
+                category: "Pola Asuh",
+                icon: "fa-face-smile-beam",
+                desc: "Tantrum adalah bagian normal dari ekspresi emosi anak. Tetap tenang, validasi perasaannya, dan berikan ruang aman bagi si kecil."
+            },
+            {
+                title: "Pentingnya Rutinitas Tidur Konsisten untuk Otak Anak",
+                category: "Kesehatan",
+                icon: "fa-moon",
+                desc: "Jadwal tidur yang teratur membantu konsolidasi memori dan hormon pertumbuhan bekerja optimal pada malam hari."
+            },
+            {
+                title: "Tips Manajemen Waktu Orang Tua Bekerja (Work-Life Balance)",
+                category: "Orang Tua",
+                icon: "fa-clock",
+                desc: "Fokus pada kualitas waktu (quality time) 15-30 menit penuh tanpa gadget bersama anak setiap sore/malam."
+            },
+            {
+                title: "Mengenal Phase Feeding: Agar Anak Tidak GTM (GTM No More)",
+                category: "Nutrisi",
+                icon: "fa-utensils",
+                desc: "Terapkan aturan makan terstruktur (feeding rules): maksimal 30 menit, tanpa distraksi layar HP atau mainan."
+            }
+        ];
+
+        // --- SWITCH TAB FUNCTION ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn flex-1 py-3 px-4 rounded-xl font-semibold text-slate-600 hover:bg-slate-50 text-sm flex items-center justify-center gap-2 transition-all whitespace-nowrap";
+            });
+
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "tab-btn flex-1 py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all whitespace-nowrap bg-brand-500 text-white shadow-sm";
+            }
+        }
+
+        // --- JADWAL LOGIC ---
+        function renderSchedules() {
+            const list = document.getElementById('schedule-list');
+            list.innerHTML = '';
+
+            let doneCount = 0;
+
+            schedules.sort((a,b) => a.time.localeCompare(b.time)).forEach(item => {
+                if (item.done) doneCount++;
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border transition flex justify-between items-center gap-3 ${
+                    item.done ? 'bg-slate-50 border-slate-200 opacity-70' : 'bg-white border-slate-100 shadow-sm'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleSchedule(${item.id})" class="w-6 h-6 rounded-lg border-2 flex items-center justify-center transition ${
+                            item.done ? 'bg-brand-500 border-brand-500 text-white' : 'border-slate-300 text-transparent'
+                        }">
+                            <i class="fa-solid fa-check text-xs"></i>
+                        </button>
+                        <div>
+                            <p class="font-bold text-sm ${item.done ? 'line-through text-slate-400' : 'text-slate-800'}">${item.title}</p>
+                            <span class="text-xs text-slate-500 font-medium"><i class="fa-regular fa-clock mr-1"></i> ${item.time} WIB • ${item.category}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteSchedule(${item.id})" class="text-slate-300 hover:text-coral-500 p-2 text-sm transition">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                list.appendChild(card);
+            });
+
+            document.getElementById('sched-counter').innerText = `${doneCount} Selesai dari ${schedules.length}`;
+        }
+
+        function addSchedule(e) {
+            e.preventDefault();
+            const title = document.getElementById('sched-title').value;
+            const category = document.getElementById('sched-category').value;
+            const time = document.getElementById('sched-time').value;
+
+            schedules.push({
+                id: Date.now(),
+                title,
+                category,
+                time,
+                done: false
+            });
+
+            document.getElementById('schedule-form').reset();
+            renderSchedules();
+        }
+
+        function toggleSchedule(id) {
+            schedules = schedules.map(s => s.id === id ? {...s, done: !s.done} : s);
+            renderSchedules();
+        }
+
+        function deleteSchedule(id) {
+            schedules = schedules.filter(s => s.id !== id);
+            renderSchedules();
+        }
+
+        // --- TRACKER TUMBUH KEMBANG LOGIC ---
+        function updateChildInfo() {
+            const name = document.getElementById('child-name-input').value || 'Si Kecil';
+            const age = document.getElementById('child-age-month').value || '0';
+            document.getElementById('header-child-name').innerText = name;
+            document.getElementById('header-child-age').innerText = `${age} Bulan`;
+        }
+
+        function calculateGrowth() {
+            updateChildInfo();
+            const age = parseFloat(document.getElementById('child-age-month').value) || 12;
+            const weight = parseFloat(document.getElementById('child-weight').value) || 10;
+            const height = parseFloat(document.getElementById('child-height').value) || 75;
+
+            document.getElementById('weight-value').innerText = `${weight} kg`;
+            document.getElementById('height-value').innerText = `${height} cm`;
+
+            // Standar perkiraan ideal WHO ringkas
+            const idealWeightMin = (8 + (age * 0.25)).toFixed(1);
+            const idealWeightMax = (10 + (age * 0.3)).toFixed(1);
+            const idealHeightMin = (65 + (age * 1.0)).toFixed(1);
+            const idealHeightMax = (72 + (age * 1.1)).toFixed(1);
+
+            document.getElementById('weight-desc').innerText = `Kisaran ideal usia ini: ${idealWeightMin} - ${idealWeightMax} kg`;
+            document.getElementById('height-desc').innerText = `Kisaran ideal usia ini: ${idealHeightMin} - ${idealHeightMax} cm`;
+        }
+
+        // --- RESEP LOGIC ---
+        function renderRecipes(filter = 'all') {
+            const grid = document.getElementById('recipes-grid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all' ? recipesData : recipesData.filter(r => r.category === filter);
+
+            filtered.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-slate-100 rounded-3xl p-5 shadow-sm space-y-4 flex flex-col justify-between hover:shadow-md transition";
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold px-3 py-1 rounded-full ${recipe.bg}">
+                                ${recipe.categoryLabel}
+                            </span>
+                            <span class="text-xs text-slate-400 font-medium">
+                                <i class="fa-regular fa-clock mr-1"></i> ${recipe.time}
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-base text-slate-800 leading-snug">${recipe.title}</h4>
+                        <p class="text-xs text-slate-500 line-clamp-2">Bahan utama: ${recipe.ingredients.slice(0,2).join(', ')}...</p>
+                    </div>
+                    <button onclick="openRecipeModal(${recipe.id})" class="w-full bg-slate-50 hover:bg-brand-50 text-slate-700 hover:text-brand-700 font-bold py-2.5 rounded-xl text-xs transition border border-slate-100 flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-book-open"></i> Lihat Resep Lengkap
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterRecipes(cat) {
+            document.querySelectorAll('.recipe-filter-btn').forEach(btn => {
+                btn.className = "recipe-filter-btn text-xs font-bold px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition";
+            });
+            event.target.className = "recipe-filter-btn active text-xs font-bold px-3 py-2 rounded-xl border border-brand-500 bg-brand-500 text-white transition";
+            renderRecipes(cat);
+        }
+
+        function openRecipeModal(id) {
+            const recipe = recipesData.find(r => r.id === id);
+            if(!recipe) return;
+
+            const content = document.getElementById('recipe-modal-content');
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <span class="text-xs font-bold px-3 py-1 rounded-full ${recipe.bg}">${recipe.categoryLabel}</span>
+                    <h3 class="font-bold text-xl text-slate-800">${recipe.title}</h3>
+                    
+                    <div class="space-y-2">
+                        <h5 class="font-bold text-xs text-slate-700 uppercase tracking-wider">Bahan-bahan:</h5>
+                        <ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
+                            ${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h5 class="font-bold text-xs text-slate-700 uppercase tracking-wider">Langkah Memasak:</h5>
+                        <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1.5">
+                            ${recipe.steps.map(s => `<li>${s}</li>`).join('')}
+                        </ol>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('recipe-modal').classList.remove('hidden');
+        }
+
+        function closeRecipeModal() {
+            document.getElementById('recipe-modal').classList.add('hidden');
+        }
+
+        // --- JURNAL MOMEN LOGIC ---
+        function renderJournals() {
+            const list = document.getElementById('journal-list');
+            list.innerHTML = '';
+
+            journals.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 relative";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <h4 class="font-bold text-base text-slate-800">${item.title}</h4>
+                        <span class="text-xs font-bold text-coral-500 bg-coral-50 px-2.5 py-1 rounded-full">${item.date}</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">${item.notes}</p>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function addJournal(e) {
+            e.preventDefault();
+            const title = document.getElementById('journal-title').value;
+            const date = document.getElementById('journal-date').value;
+            const notes = document.getElementById('journal-notes').value;
+
+            journals.unshift({ id: Date.now(), title, date, notes });
+            document.getElementById('journal-form').reset();
+            renderJournals();
+        }
+
+        // --- TIPS PARENTING LOGIC ---
+        function renderTips(filterText = '') {
+            const grid = document.getElementById('tips-grid');
+            grid.innerHTML = '';
+
+            const filtered = tipsData.filter(t => 
+                t.title.toLowerCase().includes(filterText.toLowerCase()) || 
+                t.desc.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            filtered.forEach(tip => {
+                const card = document.createElement('div');
+                card.className = "p-5 rounded-2xl bg-amber-50/50 border border-amber-100 space-y-3";
+                card.innerHTML = `
+                    <div class="flex items-center gap-2 text-amber-600 font-bold text-xs">
+                        <i class="fa-solid ${tip.icon}"></i> ${tip.category}
+                    </div>
+                    <h4 class="font-bold text-base text-slate-800">${tip.title}</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">${tip.desc}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function searchTips() {
+            const val = document.getElementById('tips-search').value;
+            renderTips(val);
+        }
+
+        // INITIAL LOAD
+        renderSchedules();
+        renderRecipes();
+        renderJournals();
+        renderTips();
+    </script>
+</body>
+</html>
